@@ -25,6 +25,8 @@
 
 	let gravity = 0.05; // Will be scaled to screen height
 	let startTime = 0;
+	let lastFrameTime = 0;
+	const TARGET_FRAME_TIME = 1000 / 120; // Normalize to 120fps (current behavior)
 	const GRAIN_VISIBLE_DURATION = 2800; // Grain fades before end, leaving pure black
 
 	function initCanvas() {
@@ -52,15 +54,23 @@
 			return;
 		}
 
-		if (startTime === 0) startTime = timestamp;
+		if (startTime === 0) {
+			startTime = timestamp;
+			lastFrameTime = timestamp;
+		}
 		const elapsed = timestamp - startTime;
+
+		// Calculate delta time for frame-rate independent physics
+		const deltaTime = timestamp - lastFrameTime;
+		lastFrameTime = timestamp;
+		const timeScale = deltaTime / TARGET_FRAME_TIME;
 
 		ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
 		if (grain.spawned && grain.alpha > 0) {
-			// Update position
-			grain.vy += gravity;
-			grain.y += grain.vy;
+			// Update position (scaled by delta time for consistent physics across refresh rates)
+			grain.vy += gravity * timeScale;
+			grain.y += grain.vy * timeScale;
 
 			// Fade out grain near the end
 			const fadeStart = GRAIN_VISIBLE_DURATION - 400;
