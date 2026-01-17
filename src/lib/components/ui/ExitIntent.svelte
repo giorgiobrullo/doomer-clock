@@ -4,6 +4,7 @@
 	let show = $state(false);
 	let hiding = $state(false);
 	let hasShown = $state(false);
+	let disabled = $state(false); // Disabled when user clicks helpline
 
 	// Flatline audio
 	let audioContext: AudioContext | null = null;
@@ -51,7 +52,7 @@
 
 	onMount(() => {
 		const handleMouseLeave = (e: MouseEvent) => {
-			if (e.clientY < 10 && !hasShown) {
+			if (e.clientY < 10 && !hasShown && !disabled) {
 				show = true;
 				hasShown = true;
 				startFlatline();
@@ -59,19 +60,25 @@
 		};
 
 		const handleVisibilityChange = () => {
-			if (document.hidden && !hasShown) {
+			if (document.hidden && !hasShown && !disabled) {
 				show = true;
 				hasShown = true;
 				startFlatline();
 			}
 		};
 
+		const handleHelplineClick = () => {
+			disabled = true;
+		};
+
 		document.addEventListener('mouseleave', handleMouseLeave);
 		document.addEventListener('visibilitychange', handleVisibilityChange);
+		window.addEventListener('helpline-click', handleHelplineClick);
 
 		return () => {
 			document.removeEventListener('mouseleave', handleMouseLeave);
 			document.removeEventListener('visibilitychange', handleVisibilityChange);
+			window.removeEventListener('helpline-click', handleHelplineClick);
 			stopFlatline();
 		};
 	});

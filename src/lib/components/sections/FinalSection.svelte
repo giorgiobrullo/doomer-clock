@@ -62,7 +62,13 @@
 			</p>
 			<p class="text-neutral-700 text-[10px]">
 				If you're struggling, please reach out:
-				<a href="https://findahelpline.com" target="_blank" rel="noopener" class="text-neutral-500 hover:text-white transition-colors">findahelpline.com</a>
+				<a
+					href="https://findahelpline.com"
+					target="_blank"
+					rel="noopener"
+					class="text-neutral-500 hover:text-white transition-colors"
+					onclick={() => window.dispatchEvent(new CustomEvent('helpline-click'))}
+				>findahelpline.com</a>
 			</p>
 		</div>
 	</div>
