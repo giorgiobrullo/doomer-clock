@@ -4,7 +4,6 @@
 
 	interface Props {
 		yearsRemaining: number;
-		visible?: boolean;
 	}
 
 	let { yearsRemaining }: Props = $props();
