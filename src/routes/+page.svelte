@@ -357,6 +357,7 @@
 				<input
 					id="userAge"
 					type="number"
+					inputmode="numeric"
 					min="1"
 					max="120"
 					bind:value={userAge}
@@ -380,7 +381,7 @@
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={parent.label} placeholder={parentPlaceholders[i] || 'Name'}
 							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
-						<input type="number" bind:value={parent.age} placeholder="Age"
+						<input type="number" inputmode="numeric" bind:value={parent.age} placeholder="Age"
 							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
 						<button type="button" onclick={() => removePerson('parent', parent.id)} class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
 							<X class="w-4 h-4" />
@@ -404,7 +405,7 @@
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={gp.label} placeholder={grandparentPlaceholders[i] || 'Name'}
 							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
-						<input type="number" bind:value={gp.age} placeholder="Age"
+						<input type="number" inputmode="numeric" bind:value={gp.age} placeholder="Age"
 							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
 						<button type="button" onclick={() => removePerson('grandparent', gp.id)} class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
 							<X class="w-4 h-4" />
@@ -426,7 +427,7 @@
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={child.label} placeholder={childPlaceholders[i] || 'Name'}
 							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
-						<input type="number" bind:value={child.age} placeholder="Age"
+						<input type="number" inputmode="numeric" bind:value={child.age} placeholder="Age"
 							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
 						<button type="button" onclick={() => removePerson('child', child.id)} class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
 							<X class="w-4 h-4" />
@@ -462,7 +463,7 @@
 						</div>
 						<input type="text" bind:value={pet.name} placeholder={pet.type === 'dog' ? "Dog's name" : "Cat's name"}
 							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
-						<input type="number" bind:value={pet.age} placeholder="Age" min="0" max="30"
+						<input type="number" inputmode="numeric" bind:value={pet.age} placeholder="Age" min="0" max="30"
 							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
 						<button type="button" onclick={() => removePet(pet.id)} class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
 							<X class="w-4 h-4" />
