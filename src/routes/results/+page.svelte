@@ -18,6 +18,7 @@
 	import DecaySection from '$lib/components/sections/DecaySection.svelte';
 	import ForgettingSection from '$lib/components/sections/ForgettingSection.svelte';
 	import PetSection from '$lib/components/sections/PetSection.svelte';
+	import SandSection from '$lib/components/sections/SandSection.svelte';
 	import FinalSection from '$lib/components/sections/FinalSection.svelte';
 	import ExitIntent from '$lib/components/ui/ExitIntent.svelte';
 
@@ -249,7 +250,8 @@
 		else if (sectionIndex <= 5) newPhase = 2;   // Comparison, Mundane - slowing
 		else if (sectionIndex <= 7) newPhase = 3;   // Decay, Family - occasional skip
 		else if (sectionIndex <= 10) newPhase = 4;  // Children, Pets, Forgetting - more skips
-		else newPhase = 5;                           // Final - stops
+		else if (sectionIndex === 11) newPhase = 5; // Sand - stops
+		else newPhase = 5;                           // Final - stays stopped
 
 		if (newPhase !== currentPhase) {
 			const wasHigherPhase = currentPhase > newPhase;
@@ -482,7 +484,10 @@
 		<!-- SECTION 11: The Forgetting -->
 		<ForgettingSection hasGrandparents={grandparents.length > 0} />
 
-		<!-- SECTION 11: Final Question -->
+		<!-- SECTION 12: Sand Visualization -->
+		<SandSection />
+
+		<!-- SECTION 13: Final Question -->
 		<FinalSection />
 	</div>
 {:else}
