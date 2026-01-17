@@ -1,0 +1,5 @@
+# https://lastgrain.life
+User-agent: *
+Disallow:
+
+Sitemap: https://lastgrain.life/sitemap.xml
