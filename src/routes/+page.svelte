@@ -4,6 +4,7 @@
 	import { mortalityStore } from '$lib/stores/mortality';
 	import { generateId } from '$lib/utils/calculations';
 	import { Volume2, VolumeX, Dog, Cat, X } from 'lucide-svelte';
+	import TransitionOverlay from '$lib/components/ui/TransitionOverlay.svelte';
 
 	let userAge = $state<number | null>(null);
 	let isMuted = $state(false);
@@ -16,10 +17,12 @@
 	// Web Audio API for echo effect
 	let audioContext: AudioContext | null = null;
 	let audioBuffer: AudioBuffer | null = null;
+	let audioArrayBuffer: ArrayBuffer | null = null; // Raw audio data (fetched on mount)
 	let sourceNode: AudioBufferSourceNode | null = null;
 	let gainNode: GainNode | null = null;
 	let loopTimeout: ReturnType<typeof setTimeout> | null = null;
 	let isPlaying = $state(false);
+	let isAudioReady = $state(false);
 
 	// Check if user previously disabled audio
 	function getAudioPreference(): boolean {
@@ -36,17 +39,12 @@
 	const grandparentPlaceholders = ['Grandma (maternal)', 'Grandpa (maternal)', 'Grandma (paternal)', 'Grandpa (paternal)'];
 	const childPlaceholders = ['First child', 'Second child', 'Third child'];
 
-	async function initAudioWithEcho() {
+	// Preload audio data (no AudioContext yet - WebKit requires user gesture)
+	async function preloadAudio() {
 		try {
-			// Just preload the audio buffer - don't try to play yet
-			// Audio will only start on user interaction (click sound button)
 			const response = await fetch('/tick-tock.mp3');
-			const arrayBuffer = await response.arrayBuffer();
-
-			// Create context only when we have the data
-			audioContext = new AudioContext();
-			audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
+			audioArrayBuffer = await response.arrayBuffer();
+			isAudioReady = true;
 			// Always start muted - user must click to enable (browser policy)
 			isMuted = true;
 		} catch {
@@ -54,12 +52,31 @@
 		}
 	}
 
-	function startAudioWithEcho() {
+	// Initialize AudioContext on user interaction (required for WebKit/Safari)
+	async function initAudioContext() {
+		if (audioContext || !audioArrayBuffer) return;
+
+		try {
+			audioContext = new AudioContext();
+			// Need to copy the ArrayBuffer since decodeAudioData detaches it
+			const bufferCopy = audioArrayBuffer.slice(0);
+			audioBuffer = await audioContext.decodeAudioData(bufferCopy);
+		} catch {
+			// Audio init failed
+		}
+	}
+
+	async function startAudioWithEcho() {
+		// Create AudioContext on first play (user gesture required for WebKit)
+		if (!audioContext) {
+			await initAudioContext();
+		}
+
 		if (!audioContext || !audioBuffer || isPlaying) return;
 
 		// Resume context if suspended (autoplay policy)
 		if (audioContext.state === 'suspended') {
-			audioContext.resume();
+			await audioContext.resume();
 		}
 
 		isPlaying = true;
@@ -177,13 +194,10 @@
 		if (isMuted) {
 			stopAudio();
 		} else {
-			// Resume context on user interaction (required by browsers)
-			if (audioContext?.state === 'suspended') {
-				await audioContext.resume();
-			}
-			// Always restart from beginning
+			// Stop any existing playback first
 			stopAudio();
-			startAudioWithEcho();
+			// Start audio (will create AudioContext if needed - user gesture)
+			await startAudioWithEcho();
 		}
 		isExpanded = false;
 	}
@@ -226,42 +240,28 @@
 			pets: processedPets
 		});
 
-		// Fade out audio smoothly before navigating (only if audio is playing)
+		// Show transition overlay
+		isSubmitting = true;
+		showTransition = true;
+
+		// Fade out audio smoothly during transition (longer fade to match transition)
 		if (gainNode && audioContext && isPlaying && !isMuted) {
-			isSubmitting = true;
-			gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.5);
-			// Navigate after fade completes (1.5s fade)
-			setTimeout(() => {
-				stopAudio();
-				if (audioContext) {
-					audioContext.close();
-				}
-				goto('/results');
-			}, 1500);
-		} else {
-			// No audio playing - navigate immediately
-			stopAudio();
-			if (audioContext) {
-				audioContext.close();
-			}
-			goto('/results');
+			gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.8);
 		}
 	}
 
 	onMount(() => {
-		initAudioWithEcho();
+		preloadAudio();
 		setTimeout(() => (isExpanded = false), 4000);
 
 		// Enable audio on first click anywhere on page (browser autoplay policy)
 		// But respect user's previous preference
 		async function handleFirstInteraction() {
 			const wasPreviouslyMuted = getAudioPreference();
-			if (isMuted && !wasPreviouslyMuted && audioContext && audioBuffer) {
+			if (isMuted && !wasPreviouslyMuted && isAudioReady) {
 				isMuted = false;
-				if (audioContext.state === 'suspended') {
-					await audioContext.resume();
-				}
-				startAudioWithEcho();
+				// Start audio (creates AudioContext on this user gesture - required for WebKit)
+				await startAudioWithEcho();
 				isExpanded = true;
 				setTimeout(() => (isExpanded = false), 3000);
 			}
@@ -284,33 +284,44 @@
 
 	let isValid = $derived(userAge !== null && userAge > 0 && userAge < 120);
 	let isSubmitting = $state(false);
+	let showTransition = $state(false);
+
+	function completeTransition() {
+		stopAudio();
+		if (audioContext) {
+			audioContext.close();
+		}
+		goto('/results');
+	}
 </script>
+
+{#if showTransition}
+	<TransitionOverlay onComplete={completeTransition} duration={2000} />
+{/if}
 
 <button
 	onclick={toggleAudio}
-	class="fixed top-6 right-6 z-50 flex items-center gap-2 px-2 py-1 hover:opacity-70 transition-opacity duration-300 group"
+	class="fixed top-6 right-6 z-50 flex flex-row-reverse items-center px-2 py-1 hover:opacity-70 transition-opacity duration-300 group"
 	aria-label={isMuted ? 'Play sound' : 'Pause sound'}
 >
-	{#if isPlaying && !isMuted}
-		<div
-			class="overflow-hidden transition-all duration-500 ease-out"
-			style="max-width: {isExpanded ? '280px' : '0px'}; opacity: {isExpanded ? 1 : 0};"
-		>
-			<div class="whitespace-nowrap">
-				<p class="text-xs text-neutral-400">
-					<span class="text-neutral-600">Now playing:</span> Clock Ticking
-				</p>
-				<p class="text-[10px] text-neutral-600">
-					by freesound_community from Pixabay
-				</p>
-			</div>
-		</div>
-	{/if}
 	{#if isMuted}
 		<VolumeX class="w-4 h-4 text-neutral-500 group-hover:text-neutral-300 transition-colors flex-shrink-0" />
 	{:else}
 		<Volume2 class="w-4 h-4 text-neutral-400 group-hover:text-neutral-200 transition-colors flex-shrink-0" />
 	{/if}
+	<div
+		class="overflow-hidden transition-all duration-500 ease-out mr-2"
+		style="max-width: {isPlaying && !isMuted && isExpanded ? '280px' : '0px'}; opacity: {isPlaying && !isMuted && isExpanded ? 1 : 0};"
+	>
+		<div class="whitespace-nowrap text-right">
+			<p class="text-xs text-neutral-400">
+				<span class="text-neutral-600">Now playing:</span> Clock Ticking
+			</p>
+			<p class="text-[10px] text-neutral-600">
+				by freesound_community from Pixabay
+			</p>
+		</div>
+	</div>
 </button>
 
 <div class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-12">
@@ -465,9 +476,9 @@
 				<button
 					type="submit"
 					disabled={!isValid || isSubmitting}
-					class="w-full py-5 text-lg font-bold uppercase tracking-widest transition-all {isSubmitting ? 'bg-neutral-900 text-neutral-500 animate-pulse' : 'bg-red-600 hover:bg-red-700 disabled:bg-neutral-800 disabled:text-neutral-600 disabled:cursor-not-allowed'}"
+					class="w-full py-5 text-lg font-bold uppercase tracking-widest transition-all bg-red-600 hover:bg-red-700 disabled:bg-neutral-800 disabled:text-neutral-600 disabled:cursor-not-allowed"
 				>
-					{isSubmitting ? '...' : 'Face Reality'}
+					Face Reality
 				</button>
 				<p class="text-center text-neutral-700 text-xs mt-4">
 					Based on average life expectancy of 78 years
