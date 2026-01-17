@@ -296,7 +296,7 @@
 </script>
 
 {#if showTransition}
-	<TransitionOverlay onComplete={completeTransition} duration={2000} />
+	<TransitionOverlay onComplete={completeTransition} />
 {/if}
 
 <button

@@ -23,7 +23,7 @@
 		alpha: 0.9
 	};
 
-	const GRAVITY = 0.03; // Very slow fall
+	let gravity = 0.05; // Will be scaled to screen height
 	let startTime = 0;
 	const GRAIN_VISIBLE_DURATION = 2800; // Grain fades before end, leaving pure black
 
@@ -40,6 +40,10 @@
 		// Initialize grain position
 		grain.x = window.innerWidth / 2;
 		grain.y = window.innerHeight * 0.15;
+
+		// Scale gravity to screen height - smaller screens need more gravity
+		// Base: 0.05 at 900px, scales up for smaller screens
+		gravity = 0.05 * (900 / Math.max(window.innerHeight, 400));
 	}
 
 	function animate(timestamp: number) {
@@ -55,7 +59,7 @@
 
 		if (grain.spawned && grain.alpha > 0) {
 			// Update position
-			grain.vy += GRAVITY;
+			grain.vy += gravity;
 			grain.y += grain.vy;
 
 			// Fade out grain near the end
