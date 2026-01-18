@@ -16,37 +16,108 @@
 	let weeksPastExpectancy = $derived(Math.abs(weeksRemaining));
 	let weeksLived = $derived(age * 52);
 
-	// Contextual gut punch based on age/situation
-	let gutPunch = $derived(() => {
-		if (isPastExpectancy) return null; // Different messaging entirely
+	// Contextual gut punch based on age/situation - brutal and granular
+	let gutPunch = $derived.by(() => {
+		if (isPastExpectancy) return null;
 
 		// If they have fewer weeks left than they've lived
 		if (weeksRemaining < weeksLived) {
 			return "Fewer than you've already spent.";
 		}
 
-		// Young people - compare to how fast time has gone
+		// Teenagers - childhood is over
+		if (age < 16) {
+			return "Your childhood ended while you weren't looking.";
+		}
+		if (age < 18) {
+			return "The easy part is over.";
+		}
+
+		// Young adults - the illusion of infinite time
+		if (age < 21) {
+			return "You think you have forever. You don't.";
+		}
 		if (age < 25) {
-			return "Remember how fast the last 5 years went?";
+			return "Remember how fast high school went? Do that three more times.";
 		}
 
-		// 25-35 - the "it goes faster" realization
+		// Late 20s - quarter-life crisis
+		if (age < 28) {
+			return "Your twenties are almost over. What did you do with them?";
+		}
+		if (age < 30) {
+			return "You're not young anymore. You just haven't accepted it.";
+		}
+
+		// 30s - the doors start closing
+		if (age < 33) {
+			return "The decade everyone warned you about.";
+		}
 		if (age < 35) {
-			return "It goes faster from here.";
+			return "The dreams you postponed? They're not waiting.";
+		}
+		if (age < 38) {
+			return "More behind you than ahead. Let that land.";
+		}
+		if (age < 40) {
+			return "The 'someday' you kept promising yourself is running out.";
 		}
 
-		// 35-50 - the halfway point
+		// 40s - midlife, invisibility begins
+		if (age < 43) {
+			return "Forty hit different, didn't it?";
+		}
+		if (age < 45) {
+			return "Young people don't see you anymore.";
+		}
+		if (age < 48) {
+			return "This is it. The middle. Except it's not the middle.";
+		}
 		if (age < 50) {
-			return "More behind you than ahead.";
+			return "Half over. The slow half.";
 		}
 
-		// 50-65 - the final chapters
+		// 50s - the final third
+		if (age < 53) {
+			return "The last third just started.";
+		}
+		if (age < 55) {
+			return "Your body has started sending warnings. You ignore them.";
+		}
+		if (age < 58) {
+			return "People your age start dying now. Not just accidents.";
+		}
+		if (age < 60) {
+			return "Retirement isn't freedom. It's the waiting room.";
+		}
+
+		// 60s - the end is visible
+		if (age < 63) {
+			return "You're old now. Saying otherwise is a lie.";
+		}
 		if (age < 65) {
-			return "The last third.";
+			return "The decline isn't coming. It's here.";
+		}
+		if (age < 68) {
+			return "You can count the good years left on one hand.";
+		}
+		if (age < 70) {
+			return "Your obituary could run tomorrow. It would make sense.";
 		}
 
-		// 65-78 - the end is visible
-		return "You can see the end from here.";
+		// 70s - borrowed time
+		if (age < 73) {
+			return "Every year from now on is borrowed.";
+		}
+		if (age < 75) {
+			return "You've started outliving people younger than you.";
+		}
+		if (age < 78) {
+			return "The runway is short.";
+		}
+
+		// 78+ but not past expectancy
+		return "Any week now.";
 	});
 </script>
 
@@ -92,9 +163,9 @@
 				weeks left to live
 			</p>
 
-			{#if gutPunch()}
+			{#if gutPunch}
 				<p use:reveal={{ delay: 400 }} class="text-neutral-500 text-xl mb-8">
-					{gutPunch()}
+					{gutPunch}
 				</p>
 			{/if}
 

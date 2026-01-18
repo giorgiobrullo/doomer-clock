@@ -13,7 +13,7 @@
 
 	let { age }: Props = $props();
 
-	// Calculate "already gone" moments - brutal edition
+	// Calculate "already gone" moments - brutal edition, no escape
 	const getAlreadyGone = (): GoneItem[] => {
 		const items: GoneItem[] = [];
 
@@ -21,240 +21,357 @@
 		items.push({
 			text: 'Yesterday',
 			detail: 'Gone. Every single yesterday, gone forever.',
-			priority: age >= 60 ? 20 : 1
+			priority: age >= 60 ? 25 : 1
 		});
 
-		// YOUNG USERS (under 18)
-		if (age < 18) {
+		// TEENAGERS (under 18) - childhood ending
+		if (age < 15) {
 			items.push({
-				text: 'Being a kid',
-				detail: "You already feel it slipping away. It doesn't come back.",
+				text: 'Being a little kid',
+				detail: "Remember when you didn't know what death meant? That's gone.",
+				priority: 2
+			});
+			items.push({
+				text: 'Believing in magic',
+				detail: "Santa. The tooth fairy. That feeling. Dead.",
+				priority: 3
+			});
+			items.push({
+				text: 'Not caring what people think',
+				detail: "You care now. You'll never stop.",
+				priority: 4
+			});
+		}
+		if (age >= 15 && age < 18) {
+			items.push({
+				text: 'Your childhood',
+				detail: "Over. You're not a kid anymore and you know it.",
 				priority: 2
 			});
 			items.push({
 				text: 'Summers that lasted forever',
-				detail: "They get shorter every year. Then they stop.",
+				detail: "They're already getting shorter. Soon they'll be weekends.",
 				priority: 3
 			});
 			items.push({
 				text: 'Your first best friend',
-				detail: "When's the last time you talked? Really talked?",
+				detail: "You've already drifted. It's already happening.",
 				priority: 4
 			});
 			items.push({
-				text: 'The world feeling big',
-				detail: "It's already getting smaller. More familiar. Less magic.",
+				text: 'Not knowing about death',
+				detail: "You understand now. You can't un-understand.",
 				priority: 5
 			});
 			items.push({
-				text: 'Not worrying about the future',
-				detail: "You already do. It's started.",
+				text: 'Feeling like you have forever',
+				detail: "The clock started. You heard it.",
 				priority: 6
 			});
 		}
 
-		// Age-based brutal truths
-		if (age >= 15 && age < 50) {
+		// YOUNG ADULTS (18-24) - invincibility fading
+		if (age >= 18 && age < 22) {
 			items.push({
-				text: 'Your childhood',
-				detail: "The magic is over. You'll never see the world that way again.",
+				text: 'High school',
+				detail: "Everyone you knew, scattered. Most you'll never see again.",
 				priority: 2
 			});
-		}
-
-		if (age >= 18 && age < 40) {
 			items.push({
-				text: `${age - 10} years since you were 10`,
-				detail: 'Remember when a year felt like forever?',
+				text: 'Living at home',
+				detail: "That safety net is gone or going.",
 				priority: 3
 			});
-		}
-
-		if (age >= 18 && age < 35) {
 			items.push({
-				text: 'First kiss. First love. First heartbreak.',
-				detail: 'All those firsts are behind you now.',
+				text: 'Not having real responsibilities',
+				detail: "They're coming. Fast.",
 				priority: 4
 			});
 		}
-
-		if (age >= 20 && age < 45) {
+		if (age >= 22 && age < 25) {
 			items.push({
-				text: 'Your teenage years',
-				detail: 'All that angst. All that time. Wasted on worrying.',
+				text: 'College (or the chance for it)',
+				detail: "That chapter closed. The structure is gone.",
+				priority: 2
+			});
+			items.push({
+				text: 'The excuse of being young',
+				detail: "People expect things from you now.",
+				priority: 3
+			});
+			items.push({
+				text: 'Friendships that felt permanent',
+				detail: "They weren't. They never are.",
+				priority: 4
+			});
+			items.push({
+				text: 'Thinking you\'d have it figured out by now',
+				detail: "You don't. You won't.",
 				priority: 5
 			});
 		}
 
-		if (age >= 22 && age < 40) {
+		// LATE 20s (25-29) - the wake-up call
+		if (age >= 25 && age < 30) {
 			items.push({
-				text: 'The "figuring it out" phase',
-				detail: "You're still figuring it out. You always will be.",
+				text: 'Your early twenties',
+				detail: "The years you thought you were just getting started.",
+				priority: 2
+			});
+			items.push({
+				text: 'The person you were at 21',
+				detail: "Dead. You killed them with every compromise.",
+				priority: 3
+			});
+			items.push({
+				text: 'Infinite possibilities',
+				detail: "Doors are closing. You hear them shut.",
+				priority: 4
+			});
+			items.push({
+				text: 'Relationships that didn\'t work',
+				detail: "Years spent. Gone. Nothing to show.",
+				priority: 5
+			});
+			items.push({
+				text: 'The body you had at 20',
+				detail: "It's already different. It's already worse.",
 				priority: 6
 			});
 		}
 
-		if (age >= 25 && age < 50) {
-			items.push({
-				text: 'The person you were going to become',
-				detail: "By now, you thought you'd have it figured out.",
-				priority: 7
-			});
-		}
-
-		if (age >= 25 && age < 40) {
-			items.push({
-				text: 'The person you were at 20',
-				detail: 'Dead. That version of you is gone.',
-				priority: 8
-			});
-		}
-
-		if (age >= 30 && age < 55) {
+		// 30s - the decade of reckoning
+		if (age >= 30 && age < 35) {
 			items.push({
 				text: 'Your twenties',
-				detail: 'The decade you thought would last forever.',
-				priority: 9
+				detail: "A whole decade. What did you do with it?",
+				priority: 2
 			});
-		}
-
-		if (age >= 30) {
 			items.push({
-				text: 'Your "unlimited potential"',
-				detail: 'Doors have closed. Paths have narrowed.',
-				priority: age >= 50 ? 15 : 10
-			});
-		}
-
-		if (age >= 35 && age < 55) {
-			items.push({
-				text: 'Being "young"',
-				detail: "You're not young anymore. You know it.",
-				priority: 11
-			});
-		}
-
-		if (age >= 40) {
-			items.push({
-				text: 'Your youth',
-				detail: 'More than half your life. Gone.',
-				priority: age >= 60 ? 12 : 10
-			});
-		}
-
-		if (age >= 40 && age < 70) {
-			items.push({
-				text: 'Your parents at your age',
-				detail: "They seemed so old then. Now you're there.",
-				priority: 11
-			});
-		}
-
-		if (age >= 40 && age < 60) {
-			items.push({
-				text: 'The person you were at 30',
-				detail: 'Also dead. You keep dying and being reborn.',
-				priority: 12
-			});
-		}
-
-		if (age >= 50) {
-			items.push({
-				text: 'More time than you have left',
-				detail: 'The majority of your life is behind you now.',
+				text: 'Being young',
+				detail: "You're not young anymore. Stop pretending.",
 				priority: 3
 			});
-		}
-
-		if (age >= 55) {
 			items.push({
-				text: 'Your career',
-				detail: "Whatever you built, it's winding down or over.",
+				text: 'The dreams you had at 25',
+				detail: "Most of them aren't happening.",
 				priority: 4
 			});
 			items.push({
-				text: 'The body you used to have',
+				text: 'Starting fresh',
+				detail: "You have a past now. It follows you.",
+				priority: 5
+			});
+		}
+		if (age >= 35 && age < 40) {
+			items.push({
+				text: 'Your early thirties',
+				detail: "The 'still figuring it out' excuse expired.",
+				priority: 2
+			});
+			items.push({
+				text: 'The life you planned',
+				detail: "This is the life you got instead.",
+				priority: 3
+			});
+			items.push({
+				text: 'Unlimited potential',
+				detail: "Doors closed. Paths narrowed. This is the corridor now.",
+				priority: 4
+			});
+			items.push({
+				text: 'Your metabolism',
 				detail: "It's not coming back.",
 				priority: 5
 			});
 		}
 
-		if (age >= 60) {
+		// 40s - the invisible decade
+		if (age >= 40 && age < 45) {
 			items.push({
-				text: 'Friends who are already gone',
-				detail: 'The list grows longer every year.',
+				text: 'Your thirties',
+				detail: "Another decade gone. They go faster now.",
+				priority: 2
+			});
+			items.push({
+				text: 'Being relevant',
+				detail: "Young people don't see you. You're furniture.",
+				priority: 3
+			});
+			items.push({
+				text: 'Your parents being middle-aged',
+				detail: "They're old now. Or gone. You're next.",
+				priority: 4
+			});
+			items.push({
+				text: 'The person you were at 30',
+				detail: "You'd barely recognize each other.",
+				priority: 5
+			});
+		}
+		if (age >= 45 && age < 50) {
+			items.push({
+				text: 'Half your life',
+				detail: "More than half. Gone. Spent.",
+				priority: 2
+			});
+			items.push({
+				text: 'Your body working without complaint',
+				detail: "It complains now. Constantly.",
+				priority: 3
+			});
+			items.push({
+				text: 'The career you thought you\'d have',
+				detail: "This is the career you have. This is it.",
+				priority: 4
+			});
+			items.push({
+				text: 'Friends from your twenties',
+				detail: "When did you last talk? Really talk?",
+				priority: 5
+			});
+		}
+
+		// 50s - the final third begins
+		if (age >= 50 && age < 55) {
+			items.push({
+				text: 'More time than you have left',
+				detail: "The majority of your life is behind you.",
+				priority: 2
+			});
+			items.push({
+				text: 'Your forties',
+				detail: "Gone. Like the others. Faster.",
+				priority: 3
+			});
+			items.push({
+				text: 'Being middle-aged',
+				detail: "You're past the middle. You're in the last part.",
+				priority: 4
+			});
+			items.push({
+				text: 'Health you took for granted',
+				detail: "Doctors find things now. They keep finding things.",
+				priority: 5
+			});
+		}
+		if (age >= 55 && age < 60) {
+			items.push({
+				text: 'Your career mattering',
+				detail: "Winding down. Or already over.",
+				priority: 2
+			});
+			items.push({
+				text: 'The body you had at 40',
+				detail: "You'd kill for that body now. You thought it was old then.",
+				priority: 3
+			});
+			items.push({
+				text: 'Friends your age',
+				detail: "Some are dying now. Not just the unlucky ones.",
+				priority: 4
+			});
+			items.push({
+				text: 'Planning for the future',
+				detail: "You're managing the present now. That's enough.",
+				priority: 5
+			});
+		}
+
+		// 60s - the end becomes real
+		if (age >= 60 && age < 65) {
+			items.push({
+				text: 'Friends who are already dead',
+				detail: "The list grows every year.",
 				priority: 1
 			});
 			items.push({
 				text: 'Your parents',
-				detail: "Probably gone. You're the older generation now.",
+				detail: "Gone. You're the oldest generation now.",
 				priority: 2
 			});
 			items.push({
 				text: 'The world you grew up in',
-				detail: "It doesn't exist anymore.",
-				priority: 6
-			});
-		}
-
-		if (age >= 65) {
-			items.push({
-				text: 'Your independence',
-				detail: 'Every year it slips a little more.',
+				detail: "Doesn't exist. You're a stranger here now.",
 				priority: 3
 			});
 			items.push({
-				text: 'Retirement as "freedom"',
-				detail: "It's not freedom. It's the final chapter.",
+				text: 'Your fifties',
+				detail: "You blinked and they were gone.",
+				priority: 4
+			});
+		}
+		if (age >= 65 && age < 70) {
+			items.push({
+				text: 'Your independence',
+				detail: "Slipping. Every year a little more.",
+				priority: 1
+			});
+			items.push({
+				text: 'Retirement as freedom',
+				detail: "It's not freedom. It's the waiting room.",
+				priority: 2
+			});
+			items.push({
+				text: 'Being needed',
+				detail: "Now you're the one who needs.",
+				priority: 3
+			});
+			items.push({
+				text: 'Most of your life',
+				detail: "What's left fits in one hand.",
 				priority: 4
 			});
 		}
 
-		if (age >= 70) {
+		// 70s - borrowed time
+		if (age >= 70 && age < 75) {
 			items.push({
 				text: 'Most of your peers',
-				detail: 'Look around. How many are left?',
+				detail: "Look around. Count who's left.",
 				priority: 1
 			});
 			items.push({
 				text: 'Decades of memories',
-				detail: 'Fading. Some already gone forever.',
+				detail: "Fading. Some already gone forever.",
 				priority: 2
 			});
 			items.push({
 				text: 'The future you planned',
-				detail: "This is it. You're in it.",
+				detail: "This is it. You're living in the epilogue.",
 				priority: 3
 			});
+			items.push({
+				text: 'Being the one who helps',
+				detail: "You're the one who needs help now.",
+				priority: 4
+			});
 		}
-
 		if (age >= 75) {
 			items.push({
 				text: 'Every assumption about "later"',
-				detail: 'There is no later. There is only now.',
+				detail: 'There is no later. Only now.',
 				priority: 1
 			});
 			items.push({
 				text: 'The luxury of time',
-				detail: 'You can feel it running out.',
+				detail: 'You feel it running out with every breath.',
 				priority: 2
 			});
-		}
-
-		// Relationship-based
-		if (age >= 20 && age < 60) {
 			items.push({
-				text: "Friends you've lost touch with",
-				detail: "You'll probably never see them again.",
-				priority: 14
+				text: 'Everyone who knew you young',
+				detail: "Most are dead. The rest are fading.",
+				priority: 3
 			});
-		}
-
-		if (age >= 25 && age < 55) {
 			items.push({
-				text: "Opportunities you didn't take",
-				detail: 'The job. The trip. The person. Gone.',
-				priority: 15
+				text: 'Tomorrow being guaranteed',
+				detail: "Every night could be the last one.",
+				priority: 4
+			});
+			items.push({
+				text: 'Being part of the conversation',
+				detail: "Decisions are made about you now. Not with you.",
+				priority: 5
 			});
 		}
 

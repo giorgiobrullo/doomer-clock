@@ -4,9 +4,10 @@
 
 	interface Props {
 		yearsRemaining: number;
+		userAge: number;
 	}
 
-	let { yearsRemaining }: Props = $props();
+	let { yearsRemaining, userAge }: Props = $props();
 
 	// Check if user is past life expectancy (negative years remaining)
 	let isPastExpectancy = $derived(yearsRemaining < 0);
@@ -27,8 +28,29 @@
 		subtext: string;
 	}
 
+	// Age-specific subtexts for activities
+	let screenSubtext = $derived.by(() => {
+		if (userAge < 18) return "TikTok. Instagram. Content that disappears.";
+		if (userAge < 30) return "scrolling, watching, refreshing";
+		if (userAge < 50) return "scrolling, watching, nothing";
+		return "television, same shows, same chair";
+	});
+
+	let waitingSubtext = $derived.by(() => {
+		if (userAge < 25) return "for things to happen, for your life to start";
+		if (userAge < 40) return "in lines, on hold, for others";
+		if (userAge < 60) return "in lines, on hold, for test results";
+		return "in waiting rooms, for calls, for visits";
+	});
+
+	let nothingSubtext = $derived.by(() => {
+		if (userAge < 25) return "staring at the ceiling, paralyzed by choice";
+		if (userAge < 40) return "but you won't call it rest";
+		if (userAge < 60) return "too tired to do more, too anxious to rest";
+		return "sitting, thinking the same thoughts";
+	});
+
 	// Universal activities everyone does - no work/commute assumptions
-	// Using months for short timeframes makes the numbers feel more concrete
 	let mundaneStats = $derived<MundaneStat[]>(isPastExpectancy ? [] : [
 		{
 			activity: 'Sleeping',
@@ -40,7 +62,7 @@
 			activity: 'On screens',
 			amount: Math.round(yearsRemaining * displayMultiplier * 0.18),
 			icon: 'smartphone',
-			subtext: 'scrolling, watching, nothing'
+			subtext: screenSubtext
 		},
 		{
 			activity: 'Eating',
@@ -58,37 +80,48 @@
 			activity: 'Waiting',
 			amount: Math.round(yearsRemaining * displayMultiplier * 0.03),
 			icon: 'clock',
-			subtext: useMonths ? 'in lines, on hold, in waiting rooms' : 'in lines, on hold, for others'
+			subtext: waitingSubtext
 		},
 		{
 			activity: 'Doing nothing',
 			amount: Math.round(yearsRemaining * displayMultiplier * 0.08),
 			icon: 'zap',
-			subtext: "but you won't call it rest"
+			subtext: nothingSubtext
 		}
 	]);
 
 	let actualAmountLeft = $derived(totalDisplay - mundaneStats.reduce((acc, s) => acc + s.amount, 0));
 
-	// Different framing for short timeframes
+	// Age-specific headers
 	let headerText = $derived.by(() => {
 		if (yearsRemaining <= 3) return "Here's what's left.";
 		if (yearsRemaining <= 10) return "It gets worse.";
-		return "But wait. It gets worse.";
+		if (userAge < 20) return "Here's what you'll waste it on.";
+		if (userAge < 30) return "But wait. It gets worse.";
+		if (userAge < 50) return "It gets worse.";
+		return "Here's where it goes.";
 	});
 
 	let subheaderText = $derived.by(() => {
 		if (useMonths) {
 			return `Of your ${totalDisplay} ${displayUnit} left, here's how you'll spend them:`;
 		}
+		if (userAge < 20) {
+			return `${yearsRemaining} years sounds like a lot. It isn't. Here's how you'll spend them:`;
+		}
 		return `Of your ${yearsRemaining} years left, here's how you'll spend them:`;
 	});
 
-	// Harsh closing for short timeframes
+	// Age-specific brutal closing
 	let closingText = $derived.by(() => {
 		if (yearsRemaining <= 2) return `${actualAmountLeft} months. That's not a life. That's a countdown.`;
 		if (yearsRemaining <= 5) return `${actualAmountLeft} months of actual living. Count them.`;
 		if (actualAmountLeft <= 1) return `${actualAmountLeft} year. Singular. Not years.`;
+		if (userAge < 20) return `${actualAmountLeft} years. Your parents have lived longer than you have left.`;
+		if (userAge < 30) return `${actualAmountLeft} years. A dog's lifetime. Maybe two.`;
+		if (userAge < 40) return `${actualAmountLeft} years. Your childhood was longer.`;
+		if (userAge < 50) return `${actualAmountLeft} years. Less than you've been an adult.`;
+		if (userAge < 60) return `${actualAmountLeft} years. Less than your career.`;
 		return "That's it.";
 	});
 </script>
