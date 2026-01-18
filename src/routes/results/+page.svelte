@@ -461,7 +461,7 @@
 		<CountdownSection userAge={data.user.age} />
 
 		<!-- SECTION 5: The number is a guess (undermines the countdown) -->
-		<ComparisonSection weeksRemaining={user.weeksRemaining} />
+		<ComparisonSection weeksRemaining={user.weeksRemaining} userAge={data.user.age} />
 
 		<!-- SECTION 6: Mundane Math -->
 		<MundaneSection yearsRemaining={user.yearsRemaining} />

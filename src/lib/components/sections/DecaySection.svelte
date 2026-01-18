@@ -23,6 +23,7 @@
 
 	let decayExperiences = $derived<DecayExperience[]>(
 		[
+			// Early signs (25-35)
 			{
 				trigger: 'You squint at your phone now.',
 				detail: 'You used to mock people who did that.',
@@ -48,6 +49,7 @@
 				detail: "Then another. You've stopped counting.",
 				minAge: 30
 			},
+			// Middle decline (35-50)
 			{
 				trigger: 'Stairs wind you now.',
 				detail: 'Just a little. Enough to notice.',
@@ -78,6 +80,7 @@
 				detail: '"We should keep an eye on that."',
 				minAge: 45
 			},
+			// Later decline (50-65)
 			{
 				trigger: "You can't hear in crowded rooms.",
 				detail: 'You nod along. Pretend you understood.',
@@ -87,6 +90,57 @@
 				trigger: 'The floor seems further away.',
 				detail: 'Dropping something is a decision now.',
 				minAge: 55
+			},
+			{
+				trigger: 'You avoid mirrors.',
+				detail: 'The person looking back is a stranger wearing your face.',
+				minAge: 55
+			},
+			{
+				trigger: 'You stopped making long-term plans.',
+				detail: "You don't say it out loud. But you know why.",
+				minAge: 60
+			},
+			// Late decline (65+)
+			{
+				trigger: 'You need help with things you used to do alone.',
+				detail: 'Small things. For now.',
+				minAge: 65
+			},
+			{
+				trigger: 'You fall sometimes.',
+				detail: 'You tell people you tripped. You both know better.',
+				minAge: 65
+			},
+			{
+				trigger: 'Your handwriting has changed.',
+				detail: "You've seen this before. In your parents.",
+				minAge: 70
+			},
+			{
+				trigger: 'You forget why you walked into a room.',
+				detail: 'Every time. Not just sometimes.',
+				minAge: 70
+			},
+			{
+				trigger: 'Getting dressed takes longer now.',
+				detail: 'Everything takes longer now.',
+				minAge: 75
+			},
+			{
+				trigger: 'You have a pill organizer.',
+				detail: "You remember when that was an 'old person' thing.",
+				minAge: 70
+			},
+			{
+				trigger: 'Your children treat you gently.',
+				detail: 'Like something fragile. Like something already breaking.',
+				minAge: 75
+			},
+			{
+				trigger: 'You nap during the day.',
+				detail: "Not because you're tired. Because there's nothing else.",
+				minAge: 75
 			}
 		].filter((e) => e.minAge <= userAge)
 	);
@@ -97,6 +151,32 @@
 			.sort((a, b) => b.minAge - a.minAge)
 			.slice(0, 5)
 	);
+
+	// Age-based header and subheader
+	let header = $derived.by(() => {
+		if (userAge >= 70) return "You remember when this started.";
+		if (userAge >= 60) return "You've stopped pretending.";
+		return "You've noticed.";
+	});
+
+	let subheader = $derived.by(() => {
+		if (userAge >= 70) return "Now you can't remember when it wasn't like this.";
+		if (userAge >= 60) return "There's no point anymore.";
+		return "You pretend you haven't.";
+	});
+
+	// Age-based progression text
+	let progressionMain = $derived.by(() => {
+		if (userAge >= 70) return "You got used to it. You had to.";
+		if (userAge >= 60) return "It happened so slowly you almost didn't notice.";
+		return "It happens so slowly you can deny it.";
+	});
+
+	let progressionSub = $derived.by(() => {
+		if (userAge >= 70) return "Now it's getting harder to get used to.";
+		if (userAge >= 60) return "Now it happens fast.";
+		return "Until you can't.";
+	});
 </script>
 
 {#if shouldShow}
@@ -104,10 +184,10 @@
 		<div class="max-w-2xl w-full">
 			<div class="text-center mb-16">
 				<h2 use:reveal class="text-3xl md:text-5xl font-bold mb-4">
-					You've noticed.
+					{header}
 				</h2>
 				<p use:reveal={{ delay: 100 }} class="text-neutral-600">
-					You pretend you haven't.
+					{subheader}
 				</p>
 			</div>
 
@@ -122,11 +202,11 @@
 
 			<!-- The progression -->
 			<div use:reveal={{ delay: 900 }} class="mt-20 space-y-4">
-				<p class="text-neutral-500">It happens so slowly you can deny it.</p>
-				<p class="text-neutral-600 text-sm">Until you can't.</p>
+				<p class="text-neutral-500">{progressionMain}</p>
+				<p class="text-neutral-600 text-sm">{progressionSub}</p>
 			</div>
 
-			{#if userAge >= 35}
+			{#if userAge >= 35 && userAge < 65}
 				<div use:reveal={{ delay: 1100 }} class="mt-16 p-4 md:p-8 border-l-2 border-red-900/50">
 					<p class="text-neutral-400 mb-4">
 						Your body peaked years ago.
@@ -140,17 +220,30 @@
 				</div>
 			{/if}
 
-			{#if userAge >= 50}
+			{#if userAge >= 65}
+				<div use:reveal={{ delay: 1100 }} class="mt-16 p-4 md:p-8 border-l-2 border-red-900/50">
+					<p class="text-neutral-400 mb-4">
+						You're not maintaining anymore.
+					</p>
+					<p class="text-neutral-500 text-sm mb-2">
+						You're managing decline. Negotiating with your own body.
+					</p>
+					<p class="text-neutral-600 text-sm">
+						Every month, something new stops working.
+					</p>
+				</div>
+			{/if}
+
+			{#if userAge >= 70}
 				<div use:reveal={{ delay: 1300 }} class="text-center mt-12">
 					<p class="text-neutral-600 text-sm">
-						You look at old photos and think: I didn't know how good I had it.
+						You look at photos from ten years ago and barely recognize yourself.
 					</p>
 					<p class="text-neutral-700 text-sm mt-4">
-						{#if isPastExpectancy}
-							Next year, you'll think the same about now.
-						{:else}
-							In ten years, you'll think the same about now.
-						{/if}
+						You looked so healthy then. You didn't feel healthy then.
+					</p>
+					<p class="text-neutral-700 text-sm mt-4">
+						Today is the healthiest you'll ever be again.
 					</p>
 				</div>
 			{/if}

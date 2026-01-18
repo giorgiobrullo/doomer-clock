@@ -12,55 +12,85 @@
 	let isPastExpectancy = $derived(yearsRemaining < 0);
 	let yearsPast = $derived(Math.abs(yearsRemaining));
 
+	// Determine display mode based on time remaining
+	// For <= 5 years, use months. For > 5 years, use years.
+	let useMonths = $derived(yearsRemaining > 0 && yearsRemaining <= 5);
+	let displayMultiplier = $derived(useMonths ? 12 : 1);
+	let displayUnit = $derived(useMonths ? 'months' : 'years');
+	let displayUnitShort = $derived(useMonths ? 'mo' : 'yrs');
+	let totalDisplay = $derived(Math.round(yearsRemaining * displayMultiplier));
+
 	interface MundaneStat {
 		activity: string;
-		years: number;
+		amount: number;
 		icon: string;
 		subtext: string;
 	}
 
 	// Universal activities everyone does - no work/commute assumptions
-	// Only calculate if years remaining is positive
+	// Using months for short timeframes makes the numbers feel more concrete
 	let mundaneStats = $derived<MundaneStat[]>(isPastExpectancy ? [] : [
 		{
 			activity: 'Sleeping',
-			years: Math.round(yearsRemaining * 0.33),
+			amount: Math.round(yearsRemaining * displayMultiplier * 0.33),
 			icon: 'moon',
 			subtext: 'unconscious'
 		},
 		{
 			activity: 'On screens',
-			years: Math.round(yearsRemaining * 0.18),
+			amount: Math.round(yearsRemaining * displayMultiplier * 0.18),
 			icon: 'smartphone',
 			subtext: 'scrolling, watching, nothing'
 		},
 		{
 			activity: 'Eating',
-			years: Math.round(yearsRemaining * 0.05),
+			amount: Math.round(yearsRemaining * displayMultiplier * 0.05),
 			icon: 'utensils',
 			subtext: 'chewing, alone or distracted'
 		},
 		{
 			activity: 'Hygiene & routine',
-			years: Math.round(yearsRemaining * 0.04),
+			amount: Math.round(yearsRemaining * displayMultiplier * 0.04),
 			icon: 'bath',
 			subtext: 'showering, brushing, maintenance'
 		},
 		{
 			activity: 'Waiting',
-			years: Math.round(yearsRemaining * 0.03),
+			amount: Math.round(yearsRemaining * displayMultiplier * 0.03),
 			icon: 'clock',
-			subtext: 'in lines, on hold, for others'
+			subtext: useMonths ? 'in lines, on hold, in waiting rooms' : 'in lines, on hold, for others'
 		},
 		{
 			activity: 'Doing nothing',
-			years: Math.round(yearsRemaining * 0.08),
+			amount: Math.round(yearsRemaining * displayMultiplier * 0.08),
 			icon: 'zap',
 			subtext: "but you won't call it rest"
 		}
 	]);
 
-	let actualYearsLeft = $derived(yearsRemaining - mundaneStats.reduce((acc, s) => acc + s.years, 0));
+	let actualAmountLeft = $derived(totalDisplay - mundaneStats.reduce((acc, s) => acc + s.amount, 0));
+
+	// Different framing for short timeframes
+	let headerText = $derived.by(() => {
+		if (yearsRemaining <= 3) return "Here's what's left.";
+		if (yearsRemaining <= 10) return "It gets worse.";
+		return "But wait. It gets worse.";
+	});
+
+	let subheaderText = $derived.by(() => {
+		if (useMonths) {
+			return `Of your ${totalDisplay} ${displayUnit} left, here's how you'll spend them:`;
+		}
+		return `Of your ${yearsRemaining} years left, here's how you'll spend them:`;
+	});
+
+	// Harsh closing for short timeframes
+	let closingText = $derived.by(() => {
+		if (yearsRemaining <= 2) return `${actualAmountLeft} months. That's not a life. That's a countdown.`;
+		if (yearsRemaining <= 5) return `${actualAmountLeft} months of actual living. Count them.`;
+		if (actualAmountLeft <= 1) return `${actualAmountLeft} year. Singular. Not years.`;
+		return "That's it.";
+	});
 </script>
 
 <section class="cinematic-section min-h-screen flex flex-col items-center justify-center px-4 py-32">
@@ -97,10 +127,10 @@
 		{:else}
 			<div class="text-center mb-16">
 				<h2 use:reveal class="text-3xl md:text-5xl font-bold mb-4">
-					But wait. It gets worse.
+					{headerText}
 				</h2>
 				<p use:reveal={{ delay: 100 }} class="text-neutral-500">
-					Of your {yearsRemaining} years left, here's how you'll spend them:
+					{subheaderText}
 				</p>
 			</div>
 
@@ -131,12 +161,12 @@
 								<span class="text-neutral-600 text-sm ml-2">— {stat.subtext}</span>
 							</div>
 							<div class="h-2 bg-neutral-800 rounded-full overflow-hidden">
-								<div class="h-full bg-red-600/80 bar-animate" style="width: {(stat.years / yearsRemaining) * 100}%"></div>
+								<div class="h-full bg-red-600/80 bar-animate" style="width: {(stat.amount / totalDisplay) * 100}%"></div>
 							</div>
 						</div>
 						<div class="text-right min-w-[80px]">
-							<span class="text-xl font-bold text-red-600">{stat.years}</span>
-							<span class="text-neutral-500 text-sm"> yrs</span>
+							<span class="text-xl font-bold text-red-600">{stat.amount}</span>
+							<span class="text-neutral-500 text-sm"> {displayUnitShort}</span>
 						</div>
 					</div>
 				{/each}
@@ -145,16 +175,22 @@
 			<div class="text-center mt-16 space-y-6">
 				<p use:reveal class="text-2xl md:text-3xl font-bold">
 					<span class="text-red-600">
-						{actualYearsLeft}
+						{actualAmountLeft}
 					</span>
-					<span class="text-neutral-400"> years of actual living.</span>
+					<span class="text-neutral-400"> {displayUnit} of actual living.</span>
 				</p>
 				<p use:reveal={{ delay: 100 }} class="text-neutral-500">
 					Not maintaining. Not waiting. Not unconscious.
 				</p>
-				<p use:reveal={{ delay: 200 }} class="text-neutral-700 text-sm mt-8">
-					That's it.
-				</p>
+				{#if yearsRemaining <= 5}
+					<p use:reveal={{ delay: 200 }} class="text-neutral-600 text-sm mt-8">
+						{closingText}
+					</p>
+				{:else}
+					<p use:reveal={{ delay: 200 }} class="text-neutral-700 text-sm mt-8">
+						{closingText}
+					</p>
+				{/if}
 			</div>
 		{/if}
 	</div>

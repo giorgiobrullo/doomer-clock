@@ -10,6 +10,20 @@
 	let { hasGrandparents, userAge }: Props = $props();
 
 	let isPastExpectancy = $derived(userAge > LIFE_EXPECTANCY);
+
+	// Age-based replacement content (instead of "ex has new inside jokes")
+	let replacementText = $derived.by(() => {
+		if (userAge >= 70) {
+			return { main: "Your children have inside jokes you're not part of.", sub: "Your grandchildren have ones they don't even tell you about." };
+		}
+		if (userAge >= 55) {
+			return { main: "Your children have inside jokes you're not part of.", sub: "You used to be the center of their world." };
+		}
+		if (userAge >= 40) {
+			return { main: "Your ex has new inside jokes.", sub: "New traditions. A new life. Yours together is a footnote." };
+		}
+		return { main: "Your ex has new inside jokes.", sub: "Yours are dead." };
+	});
 </script>
 
 <section class="cinematic-section min-h-screen flex flex-col items-center justify-center px-4 py-32 bg-black">
@@ -80,6 +94,68 @@
 					<p class="text-neutral-600 text-sm">Just like you forgot hers.</p>
 				</div>
 			</div>
+		{:else if userAge >= 65}
+			<!-- 65+ LIVING - YOU ARE BECOMING THE GRANDPARENT -->
+			<h2 use:reveal class="text-4xl md:text-6xl font-black text-center mb-4">
+				You are the grandparent now.
+			</h2>
+			<p use:reveal={{ delay: 100 }} class="text-neutral-600 text-center text-sm mb-20">The role you watched others play. Now it's yours.</p>
+
+			<div class="space-y-12 mb-20">
+				<p use:reveal={{ delay: 200 }} class="text-xl text-neutral-400">
+					Your grandchildren will barely remember you.
+				</p>
+				<p use:reveal={{ delay: 400 }} class="text-neutral-500">
+					A few stories. A face in old photos. That's what remains of a life.
+				</p>
+			</div>
+
+			<div use:reveal={{ delay: 600 }} class="text-center mb-16">
+				<p class="text-2xl md:text-3xl text-white font-bold mb-4">
+					How many people have already forgotten you?
+				</p>
+				<p class="text-neutral-600 text-sm">Friends from decades ago. Their faces already blurring in your mind too.</p>
+			</div>
+
+			<p use:reveal={{ delay: 800 }} class="text-neutral-400 mb-20">
+				{replacementText.main} <span class="text-neutral-600">{replacementText.sub}</span>
+			</p>
+
+			<div use:reveal={{ delay: 1000 }} class="text-center py-8 md:py-16 border-y border-neutral-900 mb-20">
+				<p class="text-xl text-neutral-400 mb-2">There's someone you should have called last week.</p>
+				<p class="text-3xl text-white font-bold">You'll keep meaning to.</p>
+			</div>
+
+			<div use:reveal={{ delay: 1200 }} class="mb-20">
+				<p class="text-neutral-400 mb-2">That relationship you never repaired?</p>
+				<p class="text-neutral-600 text-sm">The window is closing. You both know it. Neither of you will move first.</p>
+			</div>
+
+			<div use:reveal={{ delay: 1400 }} class="border-t border-red-900/30 pt-16">
+				<p class="text-2xl text-white font-bold mb-12">You repeat stories.</p>
+
+				<div class="space-y-8 mb-12">
+					<div>
+						<p class="text-neutral-400">You see it in their eyes when you do.</p>
+						<p class="text-neutral-600 text-sm mt-2">The polite smile. The glance at the phone.</p>
+					</div>
+
+					<div>
+						<p class="text-neutral-500">When they visit, they're checking their phones.</p>
+						<p class="text-neutral-600 text-sm mt-2">You notice. You don't say anything.</p>
+					</div>
+				</div>
+
+				<div class="mb-12">
+					<p class="text-neutral-500 mb-2">You know you're running out of time.</p>
+					<p class="text-white">You just don't want to be a burden.</p>
+				</div>
+
+				<div>
+					<p class="text-neutral-500 mb-2">What were your dreams when you were young?</p>
+					<p class="text-neutral-600 text-sm">No one has asked in years.</p>
+				</div>
+			</div>
 		{:else}
 			<!-- NORMAL - Young/middle-aged users -->
 			<!-- Opening - stark, centered -->
@@ -88,15 +164,23 @@
 			</h2>
 			<p use:reveal={{ delay: 100 }} class="text-neutral-600 text-center text-sm mb-20">Right now. While you read this.</p>
 
-			<!-- Stark single statements -->
+			<!-- Stark single statements - age appropriate -->
 			<div class="space-y-12 mb-20">
-				<p use:reveal={{ delay: 200 }} class="text-xl text-neutral-400">
-					Someone deleted your number this year.
-				</p>
-
-				<p use:reveal={{ delay: 400 }} class="text-neutral-500">
-					A friend you talked to daily doesn't think about you anymore.
-				</p>
+				{#if userAge >= 50}
+					<p use:reveal={{ delay: 200 }} class="text-xl text-neutral-400">
+						Someone at your funeral will check their phone during the eulogy.
+					</p>
+					<p use:reveal={{ delay: 400 }} class="text-neutral-500">
+						A friend you talked to daily doesn't think about you anymore.
+					</p>
+				{:else}
+					<p use:reveal={{ delay: 200 }} class="text-xl text-neutral-400">
+						Someone deleted your number this year.
+					</p>
+					<p use:reveal={{ delay: 400 }} class="text-neutral-500">
+						A friend you talked to daily doesn't think about you anymore.
+					</p>
+				{/if}
 			</div>
 
 			<!-- The flip -->
@@ -107,9 +191,9 @@
 				<p class="text-neutral-600 text-sm">Classmates. Coworkers. People who loved you.</p>
 			</div>
 
-			<!-- The replacement -->
+			<!-- The replacement - age appropriate -->
 			<p use:reveal={{ delay: 800 }} class="text-neutral-400 mb-20">
-				Your ex has new inside jokes. <span class="text-neutral-600">Yours are dead.</span>
+				{replacementText.main} <span class="text-neutral-600">{replacementText.sub}</span>
 			</p>
 
 			<!-- The accusation - the heart of the section -->
