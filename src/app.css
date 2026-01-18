@@ -111,6 +111,13 @@ input[type='number'] {
 	appearance: textfield;
 }
 
+/* Show remove buttons on touch devices (no hover available) */
+@media (pointer: coarse) {
+	.group button[type='button']:has(svg) {
+		opacity: 1 !important;
+	}
+}
+
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
 	*,
