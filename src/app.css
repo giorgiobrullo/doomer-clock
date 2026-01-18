@@ -111,11 +111,54 @@ input[type='number'] {
 	appearance: textfield;
 }
 
-/* Show remove buttons on touch devices (no hover available) */
+/* Show remove buttons on touch devices and on keyboard focus */
 @media (pointer: coarse) {
 	.group button[type='button']:has(svg) {
 		opacity: 1 !important;
 	}
+}
+
+.group:focus-within button[type='button']:has(svg),
+.group button[type='button']:has(svg):focus {
+	opacity: 1 !important;
+}
+
+/* Accessible focus indicators - only show on keyboard navigation */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible {
+	outline: 2px solid rgb(220 38 38); /* red-600 */
+	outline-offset: 2px;
+}
+
+/* Skip link styles */
+.skip-link {
+	position: absolute;
+	top: -40px;
+	left: 0;
+	background: rgb(220 38 38);
+	color: white;
+	padding: 8px 16px;
+	z-index: 1000;
+	transition: top 0.2s;
+}
+
+.skip-link:focus {
+	top: 0;
+}
+
+/* Screen reader only - visually hidden but accessible */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 /* Respect reduced motion preferences */

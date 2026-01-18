@@ -103,7 +103,8 @@
 		onkeydown={(e) => e.key === 'Escape' && dismiss()}
 		role="dialog"
 		aria-modal="true"
-		tabindex="-1"
+		aria-label="Reflection message"
+		tabindex="0"
 	>
 		<div class="max-w-lg text-center">
 			<p class="text-xl md:text-2xl text-neutral-400 leading-relaxed mb-4">
@@ -113,9 +114,10 @@
 				Wondering what you did with the time between.
 			</p>
 
-			<p class="text-neutral-700 text-xs mt-16">
+			<p class="text-neutral-700 text-xs mt-16" aria-hidden="true">
 				click anywhere to continue
 			</p>
+			<span class="sr-only">Press Escape or click anywhere to continue</span>
 		</div>
 	</div>
 {/if}

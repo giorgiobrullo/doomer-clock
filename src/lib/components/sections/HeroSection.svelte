@@ -56,17 +56,18 @@
 
 		{#if isPastExpectancy}
 			<!-- PAST LIFE EXPECTANCY -->
-			<div use:reveal={{ delay: 100 }} class="mb-6">
+			<p use:reveal={{ delay: 100 }} class="mb-6">
 				<span class="text-neutral-500 text-2xl md:text-3xl">You've outlived the average by</span>
-			</div>
+			</p>
 
-			<div use:reveal={{ delay: 200 }} class="text-7xl md:text-[12rem] font-black leading-none text-red-600 mb-6 tabular-nums">
-				{weeksPastExpectancy.toLocaleString()}
-			</div>
+			<h1 use:reveal={{ delay: 200 }} class="text-7xl md:text-[12rem] font-black leading-none text-red-600 mb-6 tabular-nums">
+				<span class="sr-only">{weeksPastExpectancy.toLocaleString()} weeks past life expectancy</span>
+				<span aria-hidden="true">{weeksPastExpectancy.toLocaleString()}</span>
+			</h1>
 
-			<div use:reveal={{ delay: 300 }} class="text-2xl md:text-4xl text-neutral-400 mb-12">
+			<p use:reveal={{ delay: 300 }} class="text-2xl md:text-4xl text-neutral-400 mb-12" aria-hidden="true">
 				weeks
-			</div>
+			</p>
 
 			<p use:reveal={{ delay: 400 }} class="text-neutral-500 text-lg max-w-md mx-auto mb-4">
 				Every week now is borrowed time.
@@ -76,17 +77,18 @@
 			</p>
 		{:else}
 			<!-- NORMAL: WEEKS REMAINING -->
-			<div use:reveal={{ delay: 100 }} class="mb-6">
+			<p use:reveal={{ delay: 100 }} class="mb-6">
 				<span class="text-neutral-500 text-2xl md:text-3xl">You have</span>
-			</div>
+			</p>
 
-			<div use:reveal={{ delay: 200 }} class="text-7xl md:text-[12rem] font-black leading-none text-red-600 mb-6 tabular-nums">
-				{weeksRemaining.toLocaleString()}
-			</div>
+			<h1 use:reveal={{ delay: 200 }} class="text-7xl md:text-[12rem] font-black leading-none text-red-600 mb-6 tabular-nums">
+				<span class="sr-only">{weeksRemaining.toLocaleString()} weeks left to live</span>
+				<span aria-hidden="true">{weeksRemaining.toLocaleString()}</span>
+			</h1>
 
-			<div use:reveal={{ delay: 300 }} class="text-2xl md:text-4xl text-neutral-400 mb-8">
+			<p use:reveal={{ delay: 300 }} class="text-2xl md:text-4xl text-neutral-400 mb-8" aria-hidden="true">
 				weeks left to live
-			</div>
+			</p>
 
 			{#if gutPunch()}
 				<p use:reveal={{ delay: 400 }} class="text-neutral-500 text-xl mb-8">

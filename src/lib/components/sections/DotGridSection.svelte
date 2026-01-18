@@ -67,6 +67,8 @@
 				bind:this={gridEl}
 				class="grid gap-[1px]"
 				style="grid-template-columns: repeat(52, 1fr); width: min(100%, 470px); transform: scaleY(-1);"
+				role="img"
+				aria-label="Life visualization grid: {weeksLived} weeks lived shown in red, {weeksRemaining} weeks remaining shown in grey. Total {TOTAL_WEEKS} weeks."
 			>
 				{#each Array(TOTAL_WEEKS) as _, i}
 					{@const isLived = i < dotsRevealed}
@@ -74,6 +76,7 @@
 					<div
 						class="aspect-square transition-all duration-150"
 						style="background: {isLived ? '#dc2626' : isRemaining ? 'rgba(255,255,255,0.06)' : '#dc2626'};"
+						aria-hidden="true"
 					></div>
 				{/each}
 			</div>

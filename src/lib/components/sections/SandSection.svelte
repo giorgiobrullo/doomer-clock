@@ -375,6 +375,8 @@
 	<canvas
 		bind:this={canvas}
 		class="absolute inset-0 w-full h-full"
+		aria-label="Animated hourglass with falling sand grains representing passing time"
+		role="img"
 	></canvas>
 
 	<!-- Text overlay -->

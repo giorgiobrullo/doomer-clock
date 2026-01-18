@@ -299,6 +299,8 @@
 	<TransitionOverlay onComplete={completeTransition} />
 {/if}
 
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
 <button
 	onclick={toggleAudio}
 	class="fixed top-6 right-6 z-50 flex flex-row-reverse items-center px-2 py-1 hover:opacity-70 transition-opacity duration-300 group"
@@ -324,11 +326,11 @@
 	</div>
 </button>
 
-<div class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-12">
+<main id="main-content" class="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-12">
 	<div class="max-w-md w-full">
 		<header class="text-center mb-10">
 			<!-- Hourglass icon -->
-			<div class="mb-6 flex justify-center">
+			<div class="mb-6 flex justify-center" aria-hidden="true">
 				<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 128 128" class="text-red-600">
 					<path d="M24 8 L104 8 L104 16 L80 48 L80 56 L104 88 L104 120 L24 120 L24 88 L48 56 L48 48 L24 16 Z"
 						fill="none"
@@ -374,17 +376,19 @@
 						<p class="text-neutral-600 text-xs">Who's still alive?</p>
 					</div>
 					{#if parents.length < 2}
-						<button type="button" onclick={addParent} class="text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">+ Add</button>
+						<button type="button" onclick={addParent} aria-label="Add parent" class="text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">+ Add</button>
 					{/if}
 				</div>
 				{#each parents as parent, i (parent.id)}
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={parent.label} placeholder={parentPlaceholders[i] || 'Name'}
+							aria-label="Parent {i + 1} name"
 							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
 						<input type="number" inputmode="numeric" bind:value={parent.age} placeholder="Age"
+							aria-label="Parent {i + 1} age"
 							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
-						<button type="button" onclick={() => removePerson('parent', parent.id)} class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
-							<X class="w-4 h-4" />
+						<button type="button" onclick={() => removePerson('parent', parent.id)} aria-label="Remove parent {parent.label || i + 1}" class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">
+							<X class="w-4 h-4" aria-hidden="true" />
 						</button>
 					</div>
 				{/each}
@@ -398,17 +402,19 @@
 						<p class="text-neutral-600 text-xs">Who's still alive?</p>
 					</div>
 					{#if grandparents.length < 4}
-						<button type="button" onclick={addGrandparent} class="text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">+ Add</button>
+						<button type="button" onclick={addGrandparent} aria-label="Add grandparent" class="text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">+ Add</button>
 					{/if}
 				</div>
 				{#each grandparents as gp, i (gp.id)}
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={gp.label} placeholder={grandparentPlaceholders[i] || 'Name'}
+							aria-label="Grandparent {i + 1} name"
 							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
 						<input type="number" inputmode="numeric" bind:value={gp.age} placeholder="Age"
+							aria-label="Grandparent {i + 1} age"
 							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
-						<button type="button" onclick={() => removePerson('grandparent', gp.id)} class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
-							<X class="w-4 h-4" />
+						<button type="button" onclick={() => removePerson('grandparent', gp.id)} aria-label="Remove grandparent {gp.label || i + 1}" class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">
+							<X class="w-4 h-4" aria-hidden="true" />
 						</button>
 					</div>
 				{/each}
@@ -421,16 +427,18 @@
 						<h3 class="text-sm font-medium text-neutral-300">Children</h3>
 						<p class="text-neutral-600 text-xs">If you have any</p>
 					</div>
-					<button type="button" onclick={addChild} class="text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">+ Add</button>
+					<button type="button" onclick={addChild} aria-label="Add child" class="text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">+ Add</button>
 				</div>
 				{#each children as child, i (child.id)}
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={child.label} placeholder={childPlaceholders[i] || 'Name'}
+							aria-label="Child {i + 1} name"
 							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
 						<input type="number" inputmode="numeric" bind:value={child.age} placeholder="Age"
+							aria-label="Child {i + 1} age"
 							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
-						<button type="button" onclick={() => removePerson('child', child.id)} class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
-							<X class="w-4 h-4" />
+						<button type="button" onclick={() => removePerson('child', child.id)} aria-label="Remove child {child.label || i + 1}" class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">
+							<X class="w-4 h-4" aria-hidden="true" />
 						</button>
 					</div>
 				{/each}
@@ -444,17 +452,17 @@
 						<p class="text-neutral-600 text-xs">They're family too</p>
 					</div>
 					<div class="flex gap-3">
-						<button type="button" onclick={() => addPet('dog')} class="flex items-center gap-1 text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">
-							<Dog class="w-3 h-3" /> Dog
+						<button type="button" onclick={() => addPet('dog')} aria-label="Add dog" class="flex items-center gap-1 text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">
+							<Dog class="w-3 h-3" aria-hidden="true" /> Dog
 						</button>
-						<button type="button" onclick={() => addPet('cat')} class="flex items-center gap-1 text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">
-							<Cat class="w-3 h-3" /> Cat
+						<button type="button" onclick={() => addPet('cat')} aria-label="Add cat" class="flex items-center gap-1 text-xs text-red-600 hover:text-red-500 uppercase tracking-wider">
+							<Cat class="w-3 h-3" aria-hidden="true" /> Cat
 						</button>
 					</div>
 				</div>
 				{#each pets as pet (pet.id)}
 					<div class="flex items-center gap-3 group">
-						<div class="w-5 flex justify-center text-neutral-600">
+						<div class="w-5 flex justify-center text-neutral-600" aria-hidden="true">
 							{#if pet.type === 'dog'}
 								<Dog class="w-4 h-4" />
 							{:else}
@@ -462,11 +470,13 @@
 							{/if}
 						</div>
 						<input type="text" bind:value={pet.name} placeholder={pet.type === 'dog' ? "Dog's name" : "Cat's name"}
+							aria-label="{pet.type === 'dog' ? 'Dog' : 'Cat'} name"
 							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
 						<input type="number" inputmode="numeric" bind:value={pet.age} placeholder="Age" min="0" max="30"
+							aria-label="{pet.type === 'dog' ? 'Dog' : 'Cat'} age"
 							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
-						<button type="button" onclick={() => removePet(pet.id)} class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
-							<X class="w-4 h-4" />
+						<button type="button" onclick={() => removePet(pet.id)} aria-label="Remove {pet.name || pet.type}" class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">
+							<X class="w-4 h-4" aria-hidden="true" />
 						</button>
 					</div>
 				{/each}
@@ -487,4 +497,4 @@
 			</div>
 		</form>
 	</div>
-</div>
+</main>
