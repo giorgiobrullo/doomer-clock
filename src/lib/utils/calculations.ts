@@ -64,12 +64,23 @@ export function calculateWeeksLived(age: number): number {
 }
 
 export function calculateWeeksRemaining(age: number): number {
+	// Can be negative for ages past life expectancy
 	const remaining = (LIFE_EXPECTANCY - age) * WEEKS_PER_YEAR;
-	return Math.max(0, Math.floor(remaining));
+	return Math.floor(remaining);
 }
 
 export function calculateYearsRemaining(age: number): number {
-	return Math.max(0, LIFE_EXPECTANCY - age);
+	// Can be negative for ages past life expectancy
+	return LIFE_EXPECTANCY - age;
+}
+
+// For display purposes when you need non-negative values
+export function calculateWeeksRemainingClamped(age: number): number {
+	return Math.max(0, calculateWeeksRemaining(age));
+}
+
+export function calculateYearsRemainingClamped(age: number): number {
+	return Math.max(0, calculateYearsRemaining(age));
 }
 
 export function calculatePercentLived(age: number): number {
@@ -77,8 +88,9 @@ export function calculatePercentLived(age: number): number {
 }
 
 export function calculateSharedTimeRemaining(userAge: number, otherPersonAge: number): number {
-	const userYearsRemaining = calculateYearsRemaining(userAge);
-	const otherYearsRemaining = calculateYearsRemaining(otherPersonAge);
+	// Use clamped values - negative years don't make sense for shared time
+	const userYearsRemaining = calculateYearsRemainingClamped(userAge);
+	const otherYearsRemaining = calculateYearsRemainingClamped(otherPersonAge);
 	return Math.min(userYearsRemaining, otherYearsRemaining);
 }
 
@@ -133,7 +145,7 @@ export function calculateQualityWeeks(sharedYears: number): number {
 
 // Calculate how old a child will be when parent dies
 export function calculateChildAgeAtParentDeath(childAge: number, parentAge: number): number {
-	const parentYearsRemaining = Math.max(0, LIFE_EXPECTANCY - parentAge);
+	const parentYearsRemaining = calculateYearsRemainingClamped(parentAge);
 	return childAge + parentYearsRemaining;
 }
 
@@ -142,8 +154,7 @@ export function calculateFutureChildTime(currentAge: number, ageAtBirth: number)
 	yearsWithChild: number;
 	childAgeAtYourDeath: number;
 } {
-	const yearsUntilBirth = ageAtBirth - currentAge;
-	const yearsWithChild = Math.max(0, LIFE_EXPECTANCY - ageAtBirth);
+	const yearsWithChild = calculateYearsRemainingClamped(ageAtBirth);
 	const childAgeAtYourDeath = yearsWithChild;
 	return { yearsWithChild, childAgeAtYourDeath };
 }
@@ -153,7 +164,7 @@ export function calculatePetStats(pet: Pet, userAge: number): PetStats {
 	const lifeExpectancy = pet.type === 'dog' ? DOG_LIFE_EXPECTANCY : CAT_LIFE_EXPECTANCY;
 	const yearsRemaining = Math.max(0, lifeExpectancy - pet.age);
 	const percentLived = Math.min(100, (pet.age / lifeExpectancy) * 100);
-	const userYearsRemaining = Math.max(0, LIFE_EXPECTANCY - userAge);
+	const userYearsRemaining = calculateYearsRemainingClamped(userAge);
 	const diesBeforeYou = yearsRemaining < userYearsRemaining;
 	const yourAgeWhenTheyDie = userAge + yearsRemaining;
 

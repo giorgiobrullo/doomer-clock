@@ -55,7 +55,7 @@
 			<!-- Per-person stats - grid layout for multiple -->
 			<div class="grid gap-6 mb-16 {allFamily.length > 1 ? 'md:grid-cols-2' : ''}">
 				{#each allFamily as person, i}
-					{@const isPastExpectancy = person.person.age >= LIFE_EXPECTANCY}
+					{@const isPastExpectancy = person.person.age > LIFE_EXPECTANCY}
 					{@const yearsPastExpectancy = person.person.age - LIFE_EXPECTANCY}
 					{@const isParent = person.person.relationship === 'parent'}
 					{@const isGrandparent = person.person.relationship === 'grandparent'}

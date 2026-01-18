@@ -454,6 +454,7 @@
 		<DotGridSection
 			weeksLived={user.weeksLived}
 			weeksRemaining={user.weeksRemaining}
+			userAge={data.user.age}
 		/>
 
 		<!-- SECTION 4: Countdown -->
@@ -482,7 +483,7 @@
 		<PetSection {pets} userAge={data.user.age} />
 
 		<!-- SECTION 11: The Forgetting -->
-		<ForgettingSection hasGrandparents={grandparents.length > 0} />
+		<ForgettingSection hasGrandparents={grandparents.length > 0} userAge={data.user.age} />
 
 		<!-- SECTION 12: Sand Visualization -->
 		<SandSection />

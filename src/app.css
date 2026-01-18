@@ -124,12 +124,14 @@ input[type='number'] {
 }
 
 /* Accessible focus indicators - only show on keyboard navigation */
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible,
-button:focus-visible {
+*:focus-visible {
 	outline: 2px solid rgb(220 38 38); /* red-600 */
 	outline-offset: 2px;
+}
+
+/* Remove focus outline from inputs that have custom border-based focus styling */
+input:focus-visible {
+	outline: none;
 }
 
 /* Skip link styles */

@@ -10,7 +10,9 @@
 
 	let { age, weeksRemaining }: Props = $props();
 
-	let isPastExpectancy = $derived(age >= LIFE_EXPECTANCY);
+	// Past expectancy means strictly older than life expectancy (> not >=)
+	let isPastExpectancy = $derived(age > LIFE_EXPECTANCY);
+	// weeksRemaining is negative when past expectancy, so abs gives weeks past
 	let weeksPastExpectancy = $derived(Math.abs(weeksRemaining));
 	let weeksLived = $derived(age * 52);
 
@@ -70,10 +72,10 @@
 			</p>
 
 			<p use:reveal={{ delay: 400 }} class="text-neutral-500 text-lg max-w-md mx-auto mb-4">
-				Every week now is borrowed time.
+				You should be dead by now.
 			</p>
 			<p use:reveal={{ delay: 500 }} class="text-neutral-600">
-				There is no average anymore. Just now.
+				Statistically, anyway.
 			</p>
 		{:else}
 			<!-- NORMAL: WEEKS REMAINING -->

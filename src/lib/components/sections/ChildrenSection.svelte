@@ -12,6 +12,7 @@
 	let { children, userAge }: Props = $props();
 
 	let hasChildren = $derived(children.length > 0);
+	let isPastExpectancy = $derived(userAge > LIFE_EXPECTANCY);
 
 	// Future children scenarios (if no children and young enough)
 	let futureChildScenarios = $derived(() => {
@@ -35,107 +36,178 @@
 {#if hasChildren}
 	<section class="cinematic-section min-h-screen flex flex-col items-center justify-center px-4 py-32 bg-gradient-to-b from-black to-neutral-950">
 		<div class="w-full max-w-3xl">
-			<div class="text-center mb-16">
-				<h2 use:reveal class="text-3xl md:text-5xl font-bold mb-4">
-					When you die
-				</h2>
-			</div>
+			{#if isPastExpectancy}
+				<!-- Past life expectancy - the burden -->
+				<div class="text-center mb-16">
+					<h2 use:reveal class="text-3xl md:text-5xl font-bold mb-4">
+						They're waiting for you to die.
+					</h2>
+					<p use:reveal={{ delay: 100 }} class="text-neutral-500">
+						Not cruelly. Just... prepared.
+					</p>
+				</div>
 
-			<div class="space-y-8">
-				{#each children as child, i}
-					{@const childAgeAtDeath = calculateChildAgeAtParentDeath(child.person.age, userAge)}
-					{@const childCurrentAge = child.person.age}
-					{@const yearsUntilIndependent = Math.max(0, 18 - childCurrentAge)}
-					{@const daysTogetherLeft = yearsUntilIndependent * 365}
-					{@const percentTimeAlreadySpent = childCurrentAge >= 18 ? 97 : Math.round((childCurrentAge / 18) * 97)}
+				<div class="space-y-8">
+					{#each children as child, i}
+						{@const childCurrentAge = child.person.age}
 
-					<div
-						use:reveal={{ delay: i * 200 + 100 }}
-						class="text-center p-6 md:p-12 border border-neutral-800 bg-neutral-900/30"
-					>
-						<p class="text-neutral-500 mb-4">Your child {child.person.label}</p>
-						<div class="text-6xl md:text-8xl font-black text-red-600 mb-4">
-							{childAgeAtDeath}
-						</div>
-						<p class="text-xl text-neutral-400 mb-8">
-							years old when they lose you.
-						</p>
-
-						{#if childAgeAtDeath <= userAge}
-							<p class="text-neutral-500 mb-8">
-								They'll be <span class="text-white">younger than you are now</span> when you're gone.
+						<div
+							use:reveal={{ delay: i * 200 + 100 }}
+							class="text-center p-6 md:p-12 border border-neutral-800 bg-neutral-900/30"
+						>
+							<p class="text-neutral-500 mb-4">Your child {child.person.label}</p>
+							<div class="text-6xl md:text-8xl font-black text-red-600 mb-4">
+								{childCurrentAge}
+							</div>
+							<p class="text-xl text-neutral-400 mb-8">
+								years old. Watching you fade.
 							</p>
-						{:else if childAgeAtDeath < 30}
-							<p class="text-neutral-500 mb-8">
-								They'll still be figuring out life. <span class="text-white">Without you.</span>
-							</p>
-						{:else}
-							<p class="text-neutral-500 mb-8">
-								Every year you stay healthy is another year with them.
-							</p>
-						{/if}
 
-						<!-- The role reversal gut punch -->
-						<div class="space-y-4 text-left max-w-md mx-auto mb-8">
-							<GutPunch variant="intense">
-								{#snippet children()}
-									Your kids feel about you the way you feel about your parents.
-								{/snippet}
-							</GutPunch>
-
-							{#if childCurrentAge >= 18}
-								<GutPunch>
+							<div class="space-y-4 text-left max-w-md mx-auto mb-8">
+								<GutPunch variant="intense">
 									{#snippet children()}
-										They've already spent 97% of their time with you.
-									{/snippet}
-									{#snippet secondary()}
-										The 3% is all that's left.
+										They've already rehearsed the eulogy in their head.
 									{/snippet}
 								</GutPunch>
-							{:else}
+
 								<GutPunch>
 									{#snippet children()}
-										When they turn 18, {percentTimeAlreadySpent}% of your time together will be gone.
+										They notice you repeating stories. Forgetting names.
 									{/snippet}
 									{#snippet secondary()}
-										{daysTogetherLeft.toLocaleString()} days of living together remain.
+										They smile and pretend it's the first time.
 									{/snippet}
 								</GutPunch>
-							{/if}
 
-							<GutPunch>
-								{#snippet children()}
-									Milestones you'll miss: Their 50th birthday. Maybe their wedding.
-								{/snippet}
-								{#snippet secondary()}
-									Definitely their grandchildren.
-								{/snippet}
-							</GutPunch>
-						</div>
+								<GutPunch>
+									{#snippet children()}
+										Every visit, they look around your home. Planning.
+									{/snippet}
+									{#snippet secondary()}
+										What to keep. What to throw away.
+									{/snippet}
+								</GutPunch>
 
-						<!-- The cycle -->
-						<div class="text-center p-4 border border-neutral-800/50">
-							<p class="text-neutral-600 text-sm">
-								One day they'll calculate how much time they have left with you.<br />
-								<span class="text-neutral-500">Just like you did with your parents.</span>
-							</p>
-						</div>
+								<GutPunch>
+									{#snippet children()}
+										They love you. And they're exhausted.
+									{/snippet}
+								</GutPunch>
+							</div>
 
-						<!-- Nuclear option - early death scenario -->
-						{#if userAge < 60 && (60 - userAge + childCurrentAge) > 0}
-							<div class="mt-8 p-6 border-t border-red-900/30">
-								<p class="text-neutral-500 text-sm mb-2">If you die at 60</p>
-								<p class="text-neutral-400">
-									Your child will be <span class="text-white font-bold">{60 - userAge + childCurrentAge}</span>.
-								</p>
-								<p class="text-neutral-600 text-sm mt-2">
-									They'll remember you got tired near the end.
+							<div class="text-center p-4 border border-neutral-800/50">
+								<p class="text-neutral-600 text-sm">
+									You used to be their hero.<br />
+									<span class="text-neutral-500">Now you're their responsibility.</span>
 								</p>
 							</div>
-						{/if}
-					</div>
-				{/each}
-			</div>
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<!-- Normal flow - years remaining -->
+				<div class="text-center mb-16">
+					<h2 use:reveal class="text-3xl md:text-5xl font-bold mb-4">
+						When you die
+					</h2>
+				</div>
+
+				<div class="space-y-8">
+					{#each children as child, i}
+						{@const childAgeAtDeath = calculateChildAgeAtParentDeath(child.person.age, userAge)}
+						{@const childCurrentAge = child.person.age}
+						{@const yearsUntilIndependent = Math.max(0, 18 - childCurrentAge)}
+						{@const daysTogetherLeft = yearsUntilIndependent * 365}
+						{@const percentTimeAlreadySpent = childCurrentAge >= 18 ? 97 : Math.round((childCurrentAge / 18) * 97)}
+
+						<div
+							use:reveal={{ delay: i * 200 + 100 }}
+							class="text-center p-6 md:p-12 border border-neutral-800 bg-neutral-900/30"
+						>
+							<p class="text-neutral-500 mb-4">Your child {child.person.label}</p>
+							<div class="text-6xl md:text-8xl font-black text-red-600 mb-4">
+								{childAgeAtDeath}
+							</div>
+							<p class="text-xl text-neutral-400 mb-8">
+								years old when they lose you.
+							</p>
+
+							{#if childAgeAtDeath <= userAge}
+								<p class="text-neutral-500 mb-8">
+									They'll be <span class="text-white">younger than you are now</span> when you're gone.
+								</p>
+							{:else if childAgeAtDeath < 30}
+								<p class="text-neutral-500 mb-8">
+									They'll still be figuring out life. <span class="text-white">Without you.</span>
+								</p>
+							{:else}
+								<p class="text-neutral-500 mb-8">
+									Every year you stay healthy is another year with them.
+								</p>
+							{/if}
+
+							<!-- The role reversal gut punch -->
+							<div class="space-y-4 text-left max-w-md mx-auto mb-8">
+								<GutPunch variant="intense">
+									{#snippet children()}
+										Your kids feel about you the way you feel about your parents.
+									{/snippet}
+								</GutPunch>
+
+								{#if childCurrentAge >= 18}
+									<GutPunch>
+										{#snippet children()}
+											They've already spent 97% of their time with you.
+										{/snippet}
+										{#snippet secondary()}
+											The 3% is all that's left.
+										{/snippet}
+									</GutPunch>
+								{:else}
+									<GutPunch>
+										{#snippet children()}
+											When they turn 18, {percentTimeAlreadySpent}% of your time together will be gone.
+										{/snippet}
+										{#snippet secondary()}
+											{daysTogetherLeft.toLocaleString()} days of living together remain.
+										{/snippet}
+									</GutPunch>
+								{/if}
+
+								<GutPunch>
+									{#snippet children()}
+										Milestones you'll miss: Their 50th birthday. Maybe their wedding.
+									{/snippet}
+									{#snippet secondary()}
+										Definitely their grandchildren.
+									{/snippet}
+								</GutPunch>
+							</div>
+
+							<!-- The cycle -->
+							<div class="text-center p-4 border border-neutral-800/50">
+								<p class="text-neutral-600 text-sm">
+									One day they'll calculate how much time they have left with you.<br />
+									<span class="text-neutral-500">Just like you did with your parents.</span>
+								</p>
+							</div>
+
+							<!-- Nuclear option - early death scenario -->
+							{#if userAge < 60 && (60 - userAge + childCurrentAge) > 0}
+								<div class="mt-8 p-6 border-t border-red-900/30">
+									<p class="text-neutral-500 text-sm mb-2">If you die at 60</p>
+									<p class="text-neutral-400">
+										Your child will be <span class="text-white font-bold">{60 - userAge + childCurrentAge}</span>.
+									</p>
+									<p class="text-neutral-600 text-sm mt-2">
+										They'll remember you got tired near the end.
+									</p>
+								</div>
+							{/if}
+						</div>
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</section>
 {/if}

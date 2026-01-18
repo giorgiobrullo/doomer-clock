@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { LIFE_EXPECTANCY } from '$lib/utils/calculations';
 	import { reveal } from '$lib/actions/reveal';
 
 	interface Props {
@@ -9,6 +10,9 @@
 
 	// Only show for age 25+ (when at least some decline has started)
 	let shouldShow = $derived(userAge >= 25);
+
+	// Check if past life expectancy
+	let isPastExpectancy = $derived(userAge > LIFE_EXPECTANCY);
 
 	// Decay experiences - visceral, not clinical
 	interface DecayExperience {
@@ -142,7 +146,11 @@
 						You look at old photos and think: I didn't know how good I had it.
 					</p>
 					<p class="text-neutral-700 text-sm mt-4">
-						In ten years, you'll think the same about now.
+						{#if isPastExpectancy}
+							Next year, you'll think the same about now.
+						{:else}
+							In ten years, you'll think the same about now.
+						{/if}
 					</p>
 				</div>
 			{/if}

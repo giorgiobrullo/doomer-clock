@@ -364,7 +364,7 @@
 					max="120"
 					bind:value={userAge}
 					placeholder="?"
-					class="w-40 text-center text-7xl font-black bg-transparent border-b-4 border-red-600 focus:outline-none focus:border-white transition-colors py-2 placeholder:text-neutral-800"
+					class="w-40 text-center text-7xl font-black bg-transparent border-b-4 border-red-600 focus:outline-none focus-visible:border-white transition-colors py-2 placeholder:text-neutral-800"
 				/>
 			</div>
 
@@ -383,10 +383,10 @@
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={parent.label} placeholder={parentPlaceholders[i] || 'Name'}
 							aria-label="Parent {i + 1} name"
-							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
+							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus-visible:border-neutral-600 placeholder:text-neutral-700" />
 						<input type="number" inputmode="numeric" bind:value={parent.age} placeholder="Age"
 							aria-label="Parent {i + 1} age"
-							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
+							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus-visible:border-red-600 placeholder:text-neutral-700" />
 						<button type="button" onclick={() => removePerson('parent', parent.id)} aria-label="Remove parent {parent.label || i + 1}" class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">
 							<X class="w-4 h-4" aria-hidden="true" />
 						</button>
@@ -409,10 +409,10 @@
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={gp.label} placeholder={grandparentPlaceholders[i] || 'Name'}
 							aria-label="Grandparent {i + 1} name"
-							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
+							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus-visible:border-neutral-600 placeholder:text-neutral-700" />
 						<input type="number" inputmode="numeric" bind:value={gp.age} placeholder="Age"
 							aria-label="Grandparent {i + 1} age"
-							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
+							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus-visible:border-red-600 placeholder:text-neutral-700" />
 						<button type="button" onclick={() => removePerson('grandparent', gp.id)} aria-label="Remove grandparent {gp.label || i + 1}" class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">
 							<X class="w-4 h-4" aria-hidden="true" />
 						</button>
@@ -433,10 +433,10 @@
 					<div class="flex items-center gap-3 group">
 						<input type="text" bind:value={child.label} placeholder={childPlaceholders[i] || 'Name'}
 							aria-label="Child {i + 1} name"
-							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
+							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus-visible:border-neutral-600 placeholder:text-neutral-700" />
 						<input type="number" inputmode="numeric" bind:value={child.age} placeholder="Age"
 							aria-label="Child {i + 1} age"
-							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
+							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus-visible:border-red-600 placeholder:text-neutral-700" />
 						<button type="button" onclick={() => removePerson('child', child.id)} aria-label="Remove child {child.label || i + 1}" class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">
 							<X class="w-4 h-4" aria-hidden="true" />
 						</button>
@@ -471,10 +471,10 @@
 						</div>
 						<input type="text" bind:value={pet.name} placeholder={pet.type === 'dog' ? "Dog's name" : "Cat's name"}
 							aria-label="{pet.type === 'dog' ? 'Dog' : 'Cat'} name"
-							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-neutral-600 placeholder:text-neutral-700" />
+							class="flex-1 bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus-visible:border-neutral-600 placeholder:text-neutral-700" />
 						<input type="number" inputmode="numeric" bind:value={pet.age} placeholder="Age" min="0" max="30"
 							aria-label="{pet.type === 'dog' ? 'Dog' : 'Cat'} age"
-							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus:border-red-600 placeholder:text-neutral-700" />
+							class="w-16 text-center bg-transparent border-b border-neutral-800 py-2 text-sm focus:outline-none focus-visible:border-red-600 placeholder:text-neutral-700" />
 						<button type="button" onclick={() => removePet(pet.id)} aria-label="Remove {pet.name || pet.type}" class="text-neutral-700 hover:text-red-600 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity">
 							<X class="w-4 h-4" aria-hidden="true" />
 						</button>
