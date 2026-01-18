@@ -1,7 +1,10 @@
 <script lang="ts">
 	import '../app.css';
 	import { MetaTags } from 'svelte-meta-tags';
+	import { injectAnalytics } from '@vercel/analytics/sveltekit';
 	let { children } = $props();
+
+	injectAnalytics();
 
 	const siteUrl = 'https://lastgrain.life';
 </script>
