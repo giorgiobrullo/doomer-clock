@@ -219,12 +219,21 @@
 		<section class="cinematic-section min-h-screen flex flex-col items-center justify-center px-4 py-32">
 			<div class="w-full max-w-3xl">
 				<div class="text-center mb-16">
-					<h2 use:reveal class="text-3xl md:text-5xl font-bold mb-4">
-						If you want children
-					</h2>
-					<p use:reveal={{ delay: 100 }} class="text-neutral-500">
-						Every year you wait is a year less with them.
-					</p>
+					{#if userAge < 20}
+						<h2 use:reveal class="text-3xl md:text-5xl font-bold mb-4">
+							If you ever become a parent
+						</h2>
+						<p use:reveal={{ delay: 100 }} class="text-neutral-500">
+							Here's how much time your kids would actually get with you.
+						</p>
+					{:else}
+						<h2 use:reveal class="text-3xl md:text-5xl font-bold mb-4">
+							If you want children
+						</h2>
+						<p use:reveal={{ delay: 100 }} class="text-neutral-500">
+							Every year you wait is a year less with them.
+						</p>
+					{/if}
 				</div>
 
 				<div class="space-y-4">
@@ -234,7 +243,7 @@
 							class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 border border-neutral-800 bg-neutral-900/30"
 						>
 							<div class="mb-2 sm:mb-0">
-								<span class="text-neutral-500">Have a child at</span>
+								<span class="text-neutral-500">{userAge < 20 ? 'Become a parent at' : 'Have a child at'}</span>
 								<span class="text-xl font-bold text-white ml-2">{scenario.ageAtBirth}</span>
 							</div>
 							<div class="sm:text-right">
@@ -246,21 +255,35 @@
 				</div>
 
 				<div use:reveal={{ delay: 600 }} class="text-center mt-12 p-4 md:p-8 border border-red-900/50 bg-red-950/20">
-					<p class="text-lg text-neutral-400">
-						A child born when you're <span class="text-white">{userAge + 1}</span> gets
-						<span class="text-red-500 font-bold">{LIFE_EXPECTANCY - userAge - 1} years</span> with you.
-					</p>
-					<p class="text-lg text-neutral-400 mt-2">
-						Wait until <span class="text-white">{Math.min(userAge + 10, 45)}</span>?
-						They only get <span class="text-red-500 font-bold">{Math.max(0, LIFE_EXPECTANCY - Math.min(userAge + 10, 45))} years</span>.
-					</p>
-					<p class="text-neutral-600 mt-4 text-sm">
-						That's {LIFE_EXPECTANCY - userAge - 1 - Math.max(0, LIFE_EXPECTANCY - Math.min(userAge + 10, 45))} fewer years of their life with a parent.
-					</p>
+					{#if userAge < 20}
+						<p class="text-lg text-neutral-400">
+							A child born when you're <span class="text-white">25</span> gets
+							<span class="text-red-500 font-bold">{LIFE_EXPECTANCY - 25} years</span> with you.
+						</p>
+						<p class="text-lg text-neutral-400 mt-2">
+							At <span class="text-white">35</span>?
+							<span class="text-red-500 font-bold">{LIFE_EXPECTANCY - 35} years</span>.
+						</p>
+						<p class="text-neutral-600 mt-4 text-sm">
+							Your parents did this math too. Whether they knew it or not.
+						</p>
+					{:else}
+						<p class="text-lg text-neutral-400">
+							A child born when you're <span class="text-white">{userAge + 1}</span> gets
+							<span class="text-red-500 font-bold">{LIFE_EXPECTANCY - userAge - 1} years</span> with you.
+						</p>
+						<p class="text-lg text-neutral-400 mt-2">
+							Wait until <span class="text-white">{Math.min(userAge + 10, 45)}</span>?
+							They only get <span class="text-red-500 font-bold">{Math.max(0, LIFE_EXPECTANCY - Math.min(userAge + 10, 45))} years</span>.
+						</p>
+						<p class="text-neutral-600 mt-4 text-sm">
+							That's {LIFE_EXPECTANCY - userAge - 1 - Math.max(0, LIFE_EXPECTANCY - Math.min(userAge + 10, 45))} fewer years of their life with a parent.
+						</p>
+					{/if}
 				</div>
 
 				<!-- Nuclear option for hypothetical children -->
-				{#if userAge < 60}
+				{#if userAge >= 20 && userAge < 60}
 					<div use:reveal={{ delay: 700 }} class="mt-8 p-6 border-t border-red-900/30 text-center">
 						<p class="text-neutral-500 text-sm mb-2">If you die at 60</p>
 						<p class="text-neutral-400">

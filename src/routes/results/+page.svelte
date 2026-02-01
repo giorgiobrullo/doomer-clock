@@ -464,7 +464,7 @@
 		<ComparisonSection weeksRemaining={user.weeksRemaining} userAge={data.user.age} />
 
 		<!-- SECTION 6: Mundane Math -->
-		<MundaneSection yearsRemaining={user.yearsRemaining} userAge={data.user.age} />
+w		<MundaneSection yearsRemaining={user.yearsRemaining} userAge={data.user.age} />
 
 		<!-- SECTION 7: Physical Decay (25+ only) -->
 		<DecaySection userAge={data.user.age} />
